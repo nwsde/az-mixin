@@ -1,6 +1,8 @@
-# az CLI Mixin for Porter
+# Azure CLI Mixin for Porter
 
 This is a mixin for Porter that provides the Azure (az) CLI.
+
+[![Build Status](https://dev.azure.com/deislabs/porter/_apis/build/status/porter-az?branchName=master)](https://dev.azure.com/deislabs/porter/_build/latest?definitionId=20&branchName=master)
 
 ## Mixin Syntax
 

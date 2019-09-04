@@ -236,6 +236,7 @@
   input-imports = [
     "github.com/deislabs/porter/pkg/context",
     "github.com/deislabs/porter/pkg/exec/builder",
+    "github.com/deislabs/porter/pkg/test",
     "github.com/gobuffalo/packr/v2",
     "github.com/spf13/cobra",
     "github.com/stretchr/testify/assert",

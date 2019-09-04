@@ -1,0 +1,10 @@
+install:
+  - az:
+      description: "Azure CLI login"
+      arguments:
+        - login
+      flags:
+        service-principal:
+        username: client-id
+        password: password
+        tenant: tenant

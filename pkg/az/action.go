@@ -63,7 +63,7 @@ func (s Step) GetArguments() []string {
 }
 
 func (s Step) GetFlags() builder.Flags {
-	return s.Flags
+	return append(s.Flags, builder.NewFlag("out", "json"))
 }
 
 func (s Step) GetOutputs() []builder.Output {
@@ -77,16 +77,13 @@ func (s Step) GetOutputs() []builder.Output {
 
 var _ builder.OutputJsonPath = Output{}
 var _ builder.OutputFile = Output{}
-var _ builder.OutputRegex = Output{}
 
 type Output struct {
 	Name string `yaml:"name"`
 
 	// See https://porter.sh/mixins/exec/#outputs
-	// TODO: If your mixin doesn't support these output types, you can remove these and the interface assertions above
 	JsonPath string `yaml:"jsonPath,omitempty"`
 	FilePath string `yaml:"path,omitempty"`
-	Regex    string `yaml:"regex,omitempty"`
 }
 
 func (o Output) GetName() string {
@@ -99,8 +96,4 @@ func (o Output) GetJsonPath() string {
 
 func (o Output) GetFilePath() string {
 	return o.FilePath
-}
-
-func (o Output) GetRegex() string {
-	return o.Regex
 }

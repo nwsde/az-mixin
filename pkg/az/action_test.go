@@ -31,3 +31,12 @@ func TestMixin_UnmarshalStep(t *testing.T) {
 	require.Len(t, step.Flags, 1)
 	assert.Equal(t, builder.NewFlag("species", "human"), step.Flags[0])
 }
+
+func TestStep_GetFlags(t *testing.T) {
+	s := Step{}
+
+	f := s.GetFlags()
+
+	require.Len(t, f, 1, "Flags should always have at least 1 entry: --out")
+	assert.Equal(t, builder.NewFlag("out", "json"), f[0])
+}

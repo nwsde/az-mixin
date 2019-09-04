@@ -1,90 +1,112 @@
-# A Porter Mixin Skeleton
+# az CLI Mixin for Porter
 
-This repository contains the skeleton structure of a Porter Mixin. You can clone
-this repository and use it as a starting point to build new mixins. The
-structure of this project matches closely with existing Porter [Mixins](https://porter.sh/mixins).
+This is a mixin for Porter that provides the Azure (az) CLI.
 
-1. Create a new repository in GitHub [using this repository as a
-   template](https://help.github.com/en/articles/creating-a-repository-from-a-template).
-1. Clone your new repository following the usual Go conventions. If you are using
-   Go 1.11, clone it into your GOPATH such as
-   ~/go/src/github.com/YOURNAME/YOURMIXIN. If you are using Go 1.12+ with go
-   modules, you may chose to clone it outside of the GOPATH.
-1. Run `dep ensure`. Check-in `Gopkg.lock` and `vendor`.
-1. Rename the `cmd/skeletor` and `pkg/skeletor` directories to `cmd/YOURMIXIN` and
-   `pkg/YOURMIXIN`.
-1. Find the text `github.com/deislabs/pkg/skeletor` in the repository and change it to 
-    `github.com/YOURNAME/pkg/YOURMIXIN`.
-1. Find any remaining `skeletor` text in the repository and replace it with `YOURMIXIN`.
-1. Run `make build xbuild test` to try out all the make targets and
-   verify that everything executes without failing.
-1. Run `make install` to install your mixin into the Porter home directory. If
-   you don't already have Porter installed, [install](https://porter.sh/install) it first.
-1. Now your mixin is installed, you are ready start customizing and iterating on
-   your mixin!
+## Mixin Syntax
 
-## Customize your mixin
+See the [az CLI Command Reference](https://docs.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest) for the supported commands.
 
-This mixin is ready to wrap an existing command-line tool. The shortest path
-would be to edit `build.go` to add the instructions to download the tool
-and you are all set. It will look and feel like the [gcloud](https://porter.sh/mixins/gcloud) 
-or [aws](https://porter.sh/mixins/aws) mixins, both of which are built on top of the exec mixin.
+```yaml
+az:
+  description: "Description of the command"
+  arguments:
+  - arg1
+  - arg2
+  flags:
+    FLAGNAME: FLAGVALUE
+    REPEATED_FLAG:
+    - FLAGVALUE1
+    - FLAGVALUE2
+  outputs:
+    - name: NAME
+      jsonPath: JSONPATH
+    - name: NAME
+      path: SOURCE_FILEPATH
+```
 
-Edit the `Build` function in `pkg/skeletor/build.go`.
-Here you can add any Dockerfile lines that you require to download and install
-additional tools, configuration files, etc necessary for your mixin. The Build
-function should write the Dockerfile lines to `m.Out` which is a pipe from the
-mixin back to porter.
+### Outputs
 
-Here is an example from the aws mixin, where it downloads the latest version of
-of the aws binary and installs it:
+The mixin supports `jsonpath` and `path` outputs.
 
-https://github.com/deislabs/porter-aws/blob/001c19bfe06d248143353a55f07a42c913579481/pkg/aws/build.go#L7
 
-This is enough to have a working mixin. Run `make build install` and then test
-it out with a bundle.
+#### JSON Path
 
-That will get you started but make sure to read the mixin developer
-documentation for how to create a full featured mixin:
+The `jsonPath` output treats stdout like a json document and applies the expression, saving the result to the output.
 
-* [Mixin Architecture](https://porter.sh/mixin-architecture/)
-* [Mixin Commands](https://porter.sh/mixin-commands/)
-* [Distributing Mixins](https://porter.sh/mixin-distribution/)
+```yaml
+outputs:
+- name: NAME
+  jsonPath: JSONPATH
+```
 
-## Project Structure
+For example, if the `jsonPath` expression was `$[*].id` and the command sent the following to stdout: 
 
-In the `cmd/skeletor` directory, you will find a cli built using [spf13/cobra](https://github.com/spf13/cobra). The CLI contains a go file for each basic capability a Mixin should implement:
+```json
+[
+  {
+    "id": "1085517466897181794",
+    "name": "my-vm"
+  }
+]
+```
 
-* build
-* schema
-* version
-* install
-* upgrade
-* invoke
-* uninstall
+Then then output would have the following contents:
 
-Each of these command implementations have a corresponding Mixin implementation in the `pkg/skeletor` directory. Each of the commands above is wired into an empty implementation in `pkg/skeletor` that needs to be completed. In order to build a new Mixin, you need to complete these implementations with the relevant technology. For example, to build a [Cloud Formation](https://aws.amazon.com/cloudformation/) mixin, you might implement the methods in `pkg/skeletor` using the [AWS Go SDK](https://docs.aws.amazon.com/sdk-for-go/api/service/cloudformation/).
+```json
+["1085517466897181794"]
+```
 
-## Provided capabilities
+#### File Paths
 
-This skeleton mixin project brings some free capabilities:
+The `path` output saves the content of the specified file path to an output.
 
-### File System Access and Context
+```yaml
+outputs:
+- name: kubeconfig
+  path: /root/.kube/config
+```
 
-Porter provides a [Context](https://github.com/deislabs/porter/tree/master/pkg/context) package that has helpful mechanisms for accessing the File System using [spf13/afero](https://github.com/spf13/afero). This makes it easy to provide mock File System implementations during testing. The Context package also provides a mechanism to encapsualte stdin, stdout and stderr so that they can easily be passed from `cmd/skeletor` code to implementing `pkg/skeletor` code.  
+---
 
-### Template and Static Asset Handling
+## Examples
 
-The project already includes [Packr V2](https://github.com/gobuffalo/packr/tree/master/v2) for dealing with static files, such as templates or other content that is best modeled outside of a Go file. You can see an example of this in `pkg/skeletor/schema.go`.
+### Authenticate
 
-### Basic Schema
+```yaml
+az:
+  description: "Azure CLI login"
+  arguments:
+    - login
+  flags:
+    service-principal:
+    username: "{{ bundle.credentials.AZURE_SP_CLIENT_ID}}"
+    password: "{{ bundle.credentials.AZURE_SP_PASSWORD}}"
+    tenant: "{{ bundle.credentials.AZURE_TENANT}}"
+```
 
-The project provides an implementation of the `skeletor schema` command that is mostly functional. To fully implement this for your mixin, you simply need to provide a valid JSON schema. For reference, consult `pkg/skeletor/schema/skeletor.json`.
+### Provision a VM
 
-### Basic Tests
+```yaml
+az:
+  description: "Create VM"
+  arguments:
+    - vm
+    - create
+  flags:
+    resource-group: porterci
+    name: myVM
+    image: UbuntuLTS
+```
 
-The project provides some very basic test skeletons that you can use as a starting point for building tests for your mixin.
+### Delete a VM
 
-### Makefile
-
-The project also includes a Makefile that will can be used to both build and install the mixin. The Makefile also includes a TODO `publish` target that shows how you might publish the mixin and generate an mixin feed for easily sharing your mixin.
+```yaml
+az:
+  description: "Delete VM"
+  arguments:
+    - vm
+    - delete
+  flags:
+    resource-group: porterci
+    name: myVM
+``

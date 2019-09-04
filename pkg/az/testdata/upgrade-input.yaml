@@ -1,0 +1,10 @@
+upgrade:
+  - az:
+      description: "Tag VM"
+      arguments:
+        - vm
+        - update
+      flags:
+        name: myVM
+        resource-group: porterci
+        set: 'tags.tagName=blue'

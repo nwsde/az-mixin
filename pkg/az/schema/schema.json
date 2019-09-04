@@ -4,28 +4,7 @@
     "installStep": {
       "type": "object",
       "properties": {
-        "az": {
-          "type": "object",
-          "properties": {
-            "description": {
-              "$ref": "#/definitions/stepDescription"
-            },
-            "name": {
-              "type": "string"
-            },
-            "parameters": {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "name",
-            "parameters"
-          ]
-        }
+        "az": {"$ref": "#/definitions/az"}
       },
       "required": [
         "az"
@@ -33,34 +12,90 @@
       "additionalProperties": false
     },
     "upgradeStep": {
-      "$ref": "#/definitions/unimplementedStep"
-    },
-    "uninstallStep": {
-      "$ref": "#/definitions/unimplementedStep"
-    },
-    "unimplementedStep": {
       "type": "object",
       "properties": {
-        "az": {
-          "type": "object",
-          "properties": {
-            "description": {
-              "$ref": "#/definitions/stepDescription"
-            }
-          },
-          "additionalProperties": false,
-          "required": [
-            "description"
-          ]
-        }
+        "az": {"$ref": "#/definitions/az"}
       },
       "required": [
         "az"
-      ]
+      ],
+      "additionalProperties": false
+    },
+    "invokeStep": {
+      "type": "object",
+      "properties": {
+        "az": {"$ref": "#/definitions/az"}
+      },
+      "required": [
+        "az"
+      ],
+      "additionalProperties": false
+    },
+    "uninstallStep": {
+      "type": "object",
+      "properties": {
+        "az": {"$ref": "#/definitions/az"}
+      },
+      "required": [
+        "az"
+      ],
+      "additionalProperties": false
     },
     "stepDescription": {
       "type": "string",
       "minLength": 1
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "jsonPath": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "oneOf": [
+          { "required": [ "jsonPath" ] },
+          { "required": [ "path" ] }
+        ]
+      }
+    },
+    "az": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "$ref": "#/definitions/stepDescription"
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "flags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": ["null","boolean","number","string"]
+          }
+        },
+        "outputs": {
+          "$ref": "#/definitions/outputs"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "description"
+      ]
     }
   },
   "type": "object",
@@ -81,6 +116,14 @@
       "type": "array",
       "items": {
         "$ref": "#/definitions/uninstallStep"
+      }
+    }
+  },
+  "patternProperties": {
+    ".*": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/invokeStep"
       }
     }
   },

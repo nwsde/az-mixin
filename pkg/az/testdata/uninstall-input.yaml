@@ -1,0 +1,9 @@
+uninstall:
+  - az:
+      description: "Delete VM"
+      arguments:
+        - vm
+        - delete
+      flags:
+        resource-group: porterci
+        name: myVM

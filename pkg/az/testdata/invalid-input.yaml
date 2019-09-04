@@ -1,0 +1,5 @@
+install:
+  - az:
+      description: "Azure CLI login"
+      args:
+        - login

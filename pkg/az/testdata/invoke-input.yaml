@@ -1,0 +1,9 @@
+list:
+  - az:
+      description: "List storage blobs"
+      arguments:
+        - storage
+        - blob
+        - list
+      flags:
+        container-name: www

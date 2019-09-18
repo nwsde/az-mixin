@@ -1,0 +1,11 @@
+config:
+  extensions:
+    - iot
+actions:
+  install:
+    - az:
+        arguments:
+          - login
+        description: Login
+  uninstall: []
+  upgrade: []

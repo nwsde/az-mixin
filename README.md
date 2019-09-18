@@ -4,6 +4,25 @@ This is a mixin for Porter that provides the Azure (az) CLI.
 
 [![Build Status](https://dev.azure.com/deislabs/porter/_apis/build/status/porter-az?branchName=master)](https://dev.azure.com/deislabs/porter/_build/latest?definitionId=20&branchName=master)
 
+## Mixin Configuration
+
+When you declare the mixin, you can also configure additional extensions to install
+
+**Use the vanilla az CLI**
+```yaml
+mixins:
+- az
+```
+
+**Install additional extensions**
+
+```yaml
+mixins:
+- az:
+    extensions:
+    - EXTENSION_NAME
+```
+
 ## Mixin Syntax
 
 See the [az CLI Command Reference](https://docs.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest) for the supported commands.
@@ -71,6 +90,15 @@ outputs:
 ---
 
 ## Examples
+
+### Install the Azure IoT Extension
+
+```yaml
+mixins:
+- az:
+    extensions:
+    - azure-cli-iot-ext
+```
 
 ### Authenticate
 

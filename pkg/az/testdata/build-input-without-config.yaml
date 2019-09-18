@@ -1,0 +1,8 @@
+actions:
+  install:
+    - az:
+        arguments:
+          - login
+        description: Login
+  uninstall: []
+  upgrade: []

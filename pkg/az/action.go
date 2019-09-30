@@ -63,7 +63,7 @@ func (s Step) GetArguments() []string {
 }
 
 func (s Step) GetFlags() builder.Flags {
-	return append(s.Flags, builder.NewFlag("out", "json"))
+	return append(s.Flags, builder.NewFlag("output", "json"))
 }
 
 func (s Step) GetOutputs() []builder.Output {

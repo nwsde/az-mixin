@@ -24,7 +24,7 @@ func TestMixin_Execute(t *testing.T) {
 		wantCommand string
 	}{
 		{"install", "testdata/install-input.yaml", "",
-			"az login --out json --password password --service-principal --tenant tenant --username client-id"},
+			"az login --output json --password password --service-principal --tenant tenant --username client-id"},
 	}
 
 	defer os.Unsetenv(test.ExpectedCommandEnv)

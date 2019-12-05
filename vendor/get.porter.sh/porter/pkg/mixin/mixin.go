@@ -1,7 +1,7 @@
 package mixin
 
 import (
-	"github.com/deislabs/porter/pkg/context"
+	"get.porter.sh/porter/pkg/context"
 )
 
 func IsCoreMixinCommand(value string) bool {
@@ -26,6 +26,7 @@ type MixinProvider interface {
 	// a structured version string. It replaces GetVersion.
 	GetVersionMetadata(Metadata) (*VersionInfo, error)
 	Install(InstallOptions) (*Metadata, error)
+	Uninstall(UninstallOptions) (*Metadata, error)
 
 	// Run a command against the specified mixin
 	Run(mixinContext *context.Context, mixinName string, commandOpts CommandOptions) error

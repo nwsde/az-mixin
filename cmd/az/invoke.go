@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/deislabs/porter-az/pkg/az"
+	"get.porter.sh/mixin/az/pkg/az"
 	"github.com/spf13/cobra"
 )
 

@@ -22,7 +22,7 @@ func TestPrintVersion(t *testing.T) {
 	m.PrintVersion(opts)
 
 	gotOutput := m.TestContext.GetOutput()
-	wantOutput := "az v1.2.3 (abc123) by DeisLabs"
+	wantOutput := "az v1.2.3 (abc123) by Porter Authors"
 	if !strings.Contains(gotOutput, wantOutput) {
 		t.Fatalf("invalid output:\nWANT:\t%q\nGOT:\t%q\n", wantOutput, gotOutput)
 	}
@@ -45,7 +45,7 @@ func TestPrintJsonVersion(t *testing.T) {
   "name": "az",
   "version": "v1.2.3",
   "commit": "abc123",
-  "author": "DeisLabs"
+  "author": "Porter Authors"
 }
 `
 	if !strings.Contains(gotOutput, wantOutput) {

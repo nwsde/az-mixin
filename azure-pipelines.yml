@@ -32,12 +32,17 @@ steps:
 - script: |
      make build test-unit
   workingDirectory: '$(modulePath)'
-  displayName: 'Unit Test'
+  displayName: 'Test Unit'
 
 - script: |
     make xbuild-all
   workingDirectory: '$(modulePath)'
   displayName: 'Cross Compile'
+
+- script: |
+    make test-integration
+  workingDirectory: '$(modulePath)'
+  displayName: 'Test Integration'
 
 - script: |
     AZURE_STORAGE_CONNECTION_STRING=$(AZURE_STORAGE_CONNECTION_STRING) make publish

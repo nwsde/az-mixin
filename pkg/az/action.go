@@ -8,7 +8,7 @@ var _ builder.ExecutableAction = Action{}
 var _ builder.BuildableAction = Action{}
 
 type Action struct {
-	Name string
+	Name  string
 	Steps []Step // using UnmarshalYAML so that we don't need a custom type per action
 }
 
@@ -54,13 +54,15 @@ type Step struct {
 
 var _ builder.ExecutableStep = Step{}
 var _ builder.StepWithOutputs = Step{}
+var _ builder.SuppressesOutput = Step{}
 
 type Instruction struct {
-	Name        string        `yaml:"name"`
-	Description string        `yaml:"description"`
-	Arguments   []string      `yaml:"arguments,omitempty"`
-	Flags       builder.Flags `yaml:"flags,omitempty"`
-	Outputs     []Output      `yaml:"outputs,omitempty"`
+	Name           string        `yaml:"name"`
+	Description    string        `yaml:"description"`
+	Arguments      []string      `yaml:"arguments,omitempty"`
+	Flags          builder.Flags `yaml:"flags,omitempty"`
+	Outputs        []Output      `yaml:"outputs,omitempty"`
+	SuppressOutput bool          `yaml:"suppress-output,omitempty"`
 }
 
 func (s Step) GetCommand() string {
@@ -82,6 +84,10 @@ func (s Step) GetOutputs() []builder.Output {
 		outputs[i] = s.Outputs[i]
 	}
 	return outputs
+}
+
+func (s Step) SuppressesOutput() bool {
+	return s.SuppressOutput
 }
 
 var _ builder.OutputJsonPath = Output{}

@@ -2,7 +2,7 @@
 
 This is a mixin for Porter that provides the Azure (az) CLI.
 
-[![Build Status](https://dev.azure.com/deislabs/porter/_apis/build/status/porter-az?branchName=master)](https://dev.azure.com/deislabs/porter/_build/latest?definitionId=20&branchName=master)
+[![Build Status](https://dev.azure.com/deislabs/porter/_apis/build/status/porter-az?branchName=main)](https://dev.azure.com/deislabs/porter/_build/latest?definitionId=20&branchName=main)
 
 ## Mixin Configuration
 

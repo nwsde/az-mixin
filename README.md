@@ -4,6 +4,8 @@ This is a mixin for Porter that provides the Azure (az) CLI.
 
 [![Build Status](https://dev.azure.com/getporter/porter/_apis/build/status/az-mixin?branchName=main)](https://dev.azure.com/getporter/porter/_build/latest?definitionId=4&branchName=main)
 
+<img src="https://porter.sh/images/mixins/azure.png" align="right" width="150px"/>
+
 ## Mixin Configuration
 
 When you declare the mixin, you can also configure additional extensions to install

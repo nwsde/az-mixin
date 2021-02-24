@@ -1,0 +1,19 @@
+# These settings are synced to GitHub by https://probot.github.io/apps/settings/
+
+# Use https://github.com/getporter/.github/blob/main/.github/settings.yml as a base settings file.
+_extends: .github
+
+repository:
+  # See https://developer.github.com/v3/repos/#edit for all available settings.
+
+  # The name of the repository. Changing this will rename the repository
+  name: az-mixin
+
+  # A short description of the repository that will show up on GitHub
+  description: An Azure CLI mixin for Porter
+
+  # A URL with more information about the repository
+  homepage: https://porter.sh/mixins/az/
+
+  # A comma-separated list of topics to set on the repository
+  topics: azure, az, cnab, mixin, porter

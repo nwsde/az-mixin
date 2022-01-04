@@ -1,0 +1,6 @@
+install:
+  - az:
+      description: "Ensure my group exists"
+      group:
+        name: mygroup
+        location: westus

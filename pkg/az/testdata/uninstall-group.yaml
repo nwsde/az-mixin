@@ -1,0 +1,5 @@
+uninstall:
+  - az:
+      description: "Remove my group"
+      group:
+        name: mygroup

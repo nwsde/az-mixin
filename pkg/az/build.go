@@ -2,8 +2,9 @@ package az
 
 import (
 	"fmt"
+
 	"get.porter.sh/porter/pkg/exec/builder"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 // BuildInput represents stdin passed to the mixin for the build command.

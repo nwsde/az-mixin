@@ -86,6 +86,10 @@ func (s Step) GetOutputs() []builder.Output {
 	return outputs
 }
 
+func (s Step) GetWorkingDir() string {
+	return ""
+}
+
 func (s Step) SuppressesOutput() bool {
 	return s.SuppressOutput
 }

@@ -24,6 +24,12 @@ func TestMixin_Execute(t *testing.T) {
 	}{
 		{"install", "testdata/install-input.yaml", "",
 			"az login --output json --password password --service-principal --tenant tenant --username client-id"},
+		{"install group", "testdata/install-group.yaml", "",
+			"az group create --location westus --name mygroup"},
+		{"update group", "testdata/upgrade-group.yaml", "",
+			"az group create --location westus --name mygroup"},
+		{"uninstall group", "testdata/uninstall-group.yaml", "",
+			"az group delete --yes --name mygroup"},
 	}
 
 	for _, tc := range testcases {

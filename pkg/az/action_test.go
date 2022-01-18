@@ -20,7 +20,7 @@ func TestMixin_UnmarshalStep(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, action.Steps, 1)
 
-	step := action.Steps[0]
+	step := action.Steps[0].TypedCommand.(*UserCommand)
 	assert.Equal(t, "Summon Minion", step.Description)
 	assert.NotEmpty(t, step.Outputs)
 	assert.Equal(t, Output{Name: "VICTORY", JsonPath: "$Id"}, step.Outputs[0])
@@ -36,7 +36,7 @@ func TestMixin_UnmarshalStep(t *testing.T) {
 }
 
 func TestStep_GetFlags(t *testing.T) {
-	s := Step{}
+	s := UserCommand{}
 
 	f := s.GetFlags()
 
@@ -53,7 +53,7 @@ func TestStep_SuppressesOutput(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, action.Steps, 1)
 
-	step := action.Steps[0]
+	step := action.Steps[0].TypedCommand.(*UserCommand)
 	assert.Equal(t, true, step.SuppressOutput)
 	assert.Equal(t, true, step.SuppressesOutput())
 }

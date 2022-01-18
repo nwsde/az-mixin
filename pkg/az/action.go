@@ -2,6 +2,8 @@ package az
 
 import (
 	"get.porter.sh/porter/pkg/exec/builder"
+	"github.com/pkg/errors"
+	"gopkg.in/yaml.v3"
 )
 
 var _ builder.ExecutableAction = Action{}
@@ -9,12 +11,12 @@ var _ builder.BuildableAction = Action{}
 
 type Action struct {
 	Name  string
-	Steps []Step // using UnmarshalYAML so that we don't need a custom type per action
+	Steps []TypedStep // using UnmarshalYAML so that we don't need a custom type per action
 }
 
 // MakeSteps builds a slice of Steps for data to be unmarshaled into.
 func (a Action) MakeSteps() interface{} {
-	return &[]Step{}
+	return &[]TypedStep{}
 }
 
 // UnmarshalYAML takes any yaml in this form
@@ -30,8 +32,11 @@ func (a *Action) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	for actionName, action := range results {
 		a.Name = actionName
 		for _, result := range action {
-			step := result.(*[]Step)
-			a.Steps = append(a.Steps, *step...)
+			steps := result.(*[]TypedStep)
+			for _, step := range *steps {
+				step.SetAction(actionName)
+				a.Steps = append(a.Steps, step)
+			}
 		}
 		break // There is only 1 action
 	}
@@ -48,36 +53,115 @@ func (a Action) GetSteps() []builder.ExecutableStep {
 	return steps
 }
 
-type Step struct {
-	Instruction `yaml:"az"`
+type Steps struct {
+	TypedStep `yaml:"az"`
 }
 
-var _ builder.ExecutableStep = Step{}
-var _ builder.StepWithOutputs = Step{}
-var _ builder.SuppressesOutput = Step{}
+type TypedStep struct {
+	Description string
+	TypedCommand
+}
 
-type Instruction struct {
+// UnmarshalYAML takes any yaml in this form
+// az:
+//   description: something
+//   COMMAND: # custom... -> make the CustomCommand for us
+func (s *TypedStep) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	// Turn the yaml into a raw map so we can iterate over the values and
+	// look for which command was used
+	stepMap := map[string]map[string]interface{}{}
+	err := unmarshal(&stepMap)
+	if err != nil {
+		return errors.Wrap(err, "could not unmarshal yaml into a raw az command")
+	}
+
+	// get at the values defined under "az"
+	step := stepMap["az"]
+
+	// Turn each command into its typed data structure
+	for key, value := range step {
+		var cmd TypedCommand
+
+		switch key {
+		case "description":
+			s.Description = value.(string)
+			continue
+		case "group":
+			cmd = &GroupCommand{}
+		default: // It's a custom user command
+			customCmd := &UserCommand{}
+			b, err := yaml.Marshal(step)
+			if err != nil {
+				return err
+			}
+
+			err = yaml.Unmarshal(b, customCmd)
+			if err != nil {
+				return err
+			}
+			s.TypedCommand = customCmd
+			return nil
+		}
+
+		// We have a typed command, unmarshal it
+		b, err := yaml.Marshal(value)
+		if err != nil {
+			return err
+		}
+
+		err = yaml.Unmarshal(b, cmd)
+		if err != nil {
+			return err
+		}
+
+		s.TypedCommand = cmd
+		return nil
+	}
+
+	return nil
+}
+
+type TypedCommand interface {
+	SetAction(action string)
+	builder.ExecutableStep
+	builder.SuppressesOutput
+}
+
+var _ TypedCommand = UserCommand{}
+
+type UserCommand struct {
 	Name           string        `yaml:"name"`
 	Description    string        `yaml:"description"`
 	Arguments      []string      `yaml:"arguments,omitempty"`
 	Flags          builder.Flags `yaml:"flags,omitempty"`
 	Outputs        []Output      `yaml:"outputs,omitempty"`
 	SuppressOutput bool          `yaml:"suppress-output,omitempty"`
+
+	// Support custom error handling
+	builder.IgnoreErrorHandler `yaml:"ignoreErrors,omitempty"`
 }
 
-func (s Step) GetCommand() string {
+func (s UserCommand) GetWorkingDir() string {
+	return ""
+}
+
+var _ builder.ExecutableStep = UserCommand{}
+var _ builder.StepWithOutputs = UserCommand{}
+var _ builder.SuppressesOutput = UserCommand{}
+
+func (s UserCommand) GetCommand() string {
 	return "az"
 }
 
-func (s Step) GetArguments() []string {
+func (s UserCommand) GetArguments() []string {
 	return s.Arguments
 }
 
-func (s Step) GetFlags() builder.Flags {
+func (s UserCommand) GetFlags() builder.Flags {
 	return append(s.Flags, builder.NewFlag("output", "json"))
 }
 
-func (s Step) GetOutputs() []builder.Output {
+func (s UserCommand) GetOutputs() []builder.Output {
 	// Go doesn't have generics, nothing to see here...
 	outputs := make([]builder.Output, len(s.Outputs))
 	for i := range s.Outputs {
@@ -86,13 +170,11 @@ func (s Step) GetOutputs() []builder.Output {
 	return outputs
 }
 
-func (s Step) GetWorkingDir() string {
-	return ""
-}
-
-func (s Step) SuppressesOutput() bool {
+func (s UserCommand) SuppressesOutput() bool {
 	return s.SuppressOutput
 }
+
+func (s UserCommand) SetAction(_ string) {}
 
 var _ builder.OutputJsonPath = Output{}
 var _ builder.OutputFile = Output{}

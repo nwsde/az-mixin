@@ -136,10 +136,7 @@
         },
         "group": {"$ref": "#/definitions/group"}
       },
-      "additionalProperties": false,
-      "required": [
-        "description"
-      ]
+      "additionalProperties": false
     },
     "group": {
       "description": "Manage a resource group",

@@ -20,5 +20,5 @@ func (m *Mixin) SetUserAgent() {
 
 func (m *Mixin) UserAgent() string {
 	v := m.Version()
-	return v.Name + "/" + v.Version
+	return "getporter/" + v.Name + "/" + v.Version
 }

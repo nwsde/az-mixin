@@ -3,6 +3,7 @@ package az
 import (
 	"testing"
 
+	"get.porter.sh/mixin/az/pkg"
 	"get.porter.sh/porter/pkg/context"
 )
 
@@ -20,6 +21,10 @@ func NewTestMixin(t *testing.T) *TestMixin {
 		},
 		TestContext: c,
 	}
+	t.Cleanup(func() {
+		pkg.Version = ""
+		pkg.Commit = ""
+	})
 
 	return m
 }

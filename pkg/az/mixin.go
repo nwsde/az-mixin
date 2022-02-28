@@ -11,8 +11,12 @@ type Mixin struct {
 
 // New azure mixin client, initialized with useful defaults.
 func New() (*Mixin, error) {
-	return &Mixin{
-		Context: context.New(),
-	}, nil
+	cxt := context.New()
+	m := &Mixin{
+		Context: cxt,
+	}
+
+	m.SetUserAgent()
+	return m, nil
 
 }

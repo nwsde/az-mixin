@@ -16,7 +16,7 @@ replace (
 )
 
 require (
-	get.porter.sh/porter v1.0.0-alpha.10.0.20220224230106-49a42a969b67
+	get.porter.sh/porter v1.0.0-alpha.13
 	github.com/ghodss/yaml v1.0.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.3
@@ -35,10 +35,10 @@ require (
 	github.com/andybalholm/brotli v1.0.0 // indirect
 	github.com/andybalholm/cascadia v1.0.0 // indirect
 	github.com/carolynvs/aferox v0.3.0 // indirect
-	github.com/carolynvs/magex v0.6.0 // indirect
+	github.com/carolynvs/magex v0.6.1 // indirect
 	github.com/cbroglie/mustache v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.1.1 // indirect
-	github.com/cnabio/cnab-go v0.22.1-0.20220219202519-002f3523865a // indirect
+	github.com/cnabio/cnab-go v0.23.0 // indirect
 	github.com/cyberphone/json-canonicalization v0.0.0-20210303052042-6bc126869bf4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dsnet/compress v0.0.1 // indirect

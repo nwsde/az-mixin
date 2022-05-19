@@ -47,7 +47,7 @@ func (a Action) GetSteps() []builder.ExecutableStep {
 	// Go doesn't have generics, nothing to see here...
 	steps := make([]builder.ExecutableStep, len(a.Steps))
 	for i := range a.Steps {
-		steps[i] = a.Steps[i]
+		steps[i] = a.Steps[i].TypedCommand
 	}
 
 	return steps
@@ -127,7 +127,7 @@ type TypedCommand interface {
 	builder.SuppressesOutput
 }
 
-var _ TypedCommand = UserCommand{}
+var _ TypedCommand = &UserCommand{}
 
 type UserCommand struct {
 	Name           string        `yaml:"name"`
@@ -145,23 +145,23 @@ func (s UserCommand) GetWorkingDir() string {
 	return ""
 }
 
-var _ builder.ExecutableStep = UserCommand{}
-var _ builder.StepWithOutputs = UserCommand{}
-var _ builder.SuppressesOutput = UserCommand{}
+var _ builder.ExecutableStep = &UserCommand{}
+var _ builder.StepWithOutputs = &UserCommand{}
+var _ builder.SuppressesOutput = &UserCommand{}
 
-func (s UserCommand) GetCommand() string {
+func (s *UserCommand) GetCommand() string {
 	return "az"
 }
 
-func (s UserCommand) GetArguments() []string {
+func (s *UserCommand) GetArguments() []string {
 	return s.Arguments
 }
 
-func (s UserCommand) GetFlags() builder.Flags {
+func (s *UserCommand) GetFlags() builder.Flags {
 	return append(s.Flags, builder.NewFlag("output", "json"))
 }
 
-func (s UserCommand) GetOutputs() []builder.Output {
+func (s *UserCommand) GetOutputs() []builder.Output {
 	// Go doesn't have generics, nothing to see here...
 	outputs := make([]builder.Output, len(s.Outputs))
 	for i := range s.Outputs {
@@ -170,11 +170,11 @@ func (s UserCommand) GetOutputs() []builder.Output {
 	return outputs
 }
 
-func (s UserCommand) SuppressesOutput() bool {
+func (s *UserCommand) SuppressesOutput() bool {
 	return s.SuppressOutput
 }
 
-func (s UserCommand) SetAction(_ string) {}
+func (s *UserCommand) SetAction(_ string) {}
 
 var _ builder.OutputJsonPath = Output{}
 var _ builder.OutputFile = Output{}

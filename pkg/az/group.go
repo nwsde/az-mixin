@@ -14,9 +14,10 @@ var (
 
 // GroupCommand ensures that a group exist or not
 type GroupCommand struct {
-	action   string
-	Name     string `yaml:"name"`
-	Location string `yaml:"location"`
+	action      string
+	Description string `yaml:"description"`
+	Name        string `yaml:"name"`
+	Location    string `yaml:"location"`
 }
 
 func (c *GroupCommand) HandleError(cxt *context.Context, err builder.ExitError, stdout string, stderr string) error {

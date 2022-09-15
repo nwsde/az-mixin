@@ -2,48 +2,38 @@ package az
 
 import (
 	"bytes"
-	"context"
 	"io/ioutil"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	"get.porter.sh/porter/pkg/test"
+
 	"github.com/stretchr/testify/require"
 )
 
 func TestMixin_Build(t *testing.T) {
-	const buildOutput = `RUN apt-get update && apt-get install -y apt-transport-https lsb-release gnupg curl
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg
-RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list
-RUN apt-get update && apt-get install -y azure-cli
-`
 
-	t.Run("build with config", func(t *testing.T) {
-		b, err := ioutil.ReadFile("testdata/build-input-with-config.yaml")
-		require.NoError(t, err)
+	testcases := []struct {
+		name           string
+		inputFile      string
+		wantOutputFile string
+	}{
+		{name: "build with config", inputFile: "testdata/build-input-with-config.yaml", wantOutputFile: "testdata/build-with-config.txt"},
+		{name: "build without config", inputFile: "testdata/build-input-without-config.yaml", wantOutputFile: "testdata/build-without-config.txt"},
+	}
 
-		m := NewTestMixin(t)
-		m.In = bytes.NewReader(b)
+	for _, tc := range testcases {
+		t.Run("build with config", func(t *testing.T) {
+			b, err := ioutil.ReadFile(tc.inputFile)
+			require.NoError(t, err)
 
-		err = m.Build(context.Background())
-		require.NoError(t, err, "build failed")
+			m := NewTestMixin(t)
+			m.Debug = false
+			m.In = bytes.NewReader(b)
 
-		wantOutput := buildOutput + `RUN az extension add -y --name iot
-`
-		gotOutput := m.TestContext.GetOutput()
-		assert.Equal(t, wantOutput, gotOutput)
-	})
+			err = m.Build()
+			require.NoError(t, err, "build failed")
 
-	t.Run("build without config", func(t *testing.T) {
-		b, err := ioutil.ReadFile("testdata/build-input-without-config.yaml")
-		require.NoError(t, err)
-
-		m := NewTestMixin(t)
-		m.In = bytes.NewReader(b)
-
-		err = m.Build(context.Background())
-		require.NoError(t, err, "build failed")
-
-		gotOutput := m.TestContext.GetOutput()
-		assert.Equal(t, buildOutput, gotOutput)
-	})
+			test.CompareGoldenFile(t, tc.wantOutputFile, m.TestContext.GetOutput())
+		})
+	}
 }

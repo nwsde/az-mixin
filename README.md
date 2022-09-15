@@ -8,6 +8,18 @@ This is a mixin for Porter that provides the Azure (az) CLI.
 
 ## Mixin Configuration
 
+### Client Version
+By default, the most recent version of the az CLI is installed.
+You can specify a specific version with the `clientVersion` setting.
+
+```yaml
+mixins:
+  - az:
+      clientVersion: 1.2.3
+```
+
+### Extensions
+
 When you declare the mixin, you can also configure additional extensions to install
 
 **Use the vanilla az CLI**

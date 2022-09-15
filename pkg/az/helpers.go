@@ -18,9 +18,7 @@ func NewTestMixin(t *testing.T) *TestMixin {
 	c := portercontext.NewTestContext(t)
 	cfg := runtime.NewConfigFor(c.Context)
 	m := &TestMixin{
-		Mixin: &Mixin{
-			RuntimeConfig: cfg,
-		},
+		Mixin:       NewFor(cfg),
 		TestContext: c,
 	}
 	t.Cleanup(func() {

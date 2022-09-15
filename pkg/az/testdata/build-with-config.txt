@@ -1,4 +1,5 @@
 
+ENV AZURE_HTTP_USER_AGENT="getporter/porter getporter/az/v1.2.3"
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
 	apt-get update && apt-get install -y apt-transport-https lsb-release gnupg curl
 RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg

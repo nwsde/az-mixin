@@ -6,13 +6,12 @@ import (
 	"io/ioutil"
 	"testing"
 
+	"get.porter.sh/mixin/az/pkg"
 	"get.porter.sh/porter/pkg/test"
-
 	"github.com/stretchr/testify/require"
 )
 
 func TestMixin_Build(t *testing.T) {
-
 	testcases := []struct {
 		name           string
 		inputFile      string
@@ -23,7 +22,10 @@ func TestMixin_Build(t *testing.T) {
 	}
 
 	for _, tc := range testcases {
-		t.Run("build with config", func(t *testing.T) {
+		t.Run(tc.name, func(t *testing.T) {
+			// Set a take version of the mixin and porter for our user agent
+			pkg.Version = "v1.2.3"
+
 			b, err := ioutil.ReadFile(tc.inputFile)
 			require.NoError(t, err)
 

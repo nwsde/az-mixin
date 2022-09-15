@@ -20,14 +20,16 @@ type BuildInput struct {
 //     extensions:
 //     - NAME
 type MixinConfig struct {
-	ClientVersion string   `yaml:"clientVersion,omitempty"`
-	Extensions    []string `yaml:"extensions,omitempty"`
+	AzureUserAgent string   // This is not set by the bundle author
+	ClientVersion  string   `yaml:"clientVersion,omitempty"`
+	Extensions     []string `yaml:"extensions,omitempty"`
 }
 
 // The package version of the az cli follows this format:
 // VERSION-1~DISTRO_CODENAME So if we are running on debian stretch and have a
 // version of 1.2.3, the package version would be 1.2.3-1~stretch.
 const buildTemplate string = `
+ENV AZURE_HTTP_USER_AGENT="{{ .AzureUserAgent }}"
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
 	apt-get update && apt-get install -y apt-transport-https lsb-release gnupg curl
 RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg
@@ -55,6 +57,11 @@ func (m *Mixin) Build(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("error parsing Dockerfile template for the az mixin: %w", err)
 	}
+
+	// Set the az CLI user agent as an environment variable in the bundle so that
+	// when az is called from helper scripts or from the mixin directly, the user
+	// agent string is set.
+	input.Config.AzureUserAgent = m.Getenv(AZURE_HTTP_USER_AGENT)
 
 	if err = tmpl.Execute(m.Out, input.Config); err != nil {
 		return fmt.Errorf("error generating Dockerfile lines for the az mixin: %w", err)

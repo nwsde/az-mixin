@@ -16,12 +16,7 @@ import (
 func main() {
 	run := func() int {
 		ctx := context.Background()
-		m, err := az.New()
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(cli.ExitCodeErr)
-		}
-
+		m := az.New()
 		if err := m.ConfigureLogging(ctx); err != nil {
 			fmt.Println(err)
 			os.Exit(cli.ExitCodeErr)

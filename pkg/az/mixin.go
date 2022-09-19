@@ -6,6 +6,7 @@ import (
 
 type Mixin struct {
 	runtime.RuntimeConfig
+	userAgent string
 }
 
 // New azure mixin client, initialized with useful defaults.

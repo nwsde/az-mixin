@@ -18,7 +18,7 @@ func NewTestMixin(t *testing.T) *TestMixin {
 	c := portercontext.NewTestContext(t)
 
 	// Clear this out when testing since our CI environment has modifications to it
-	c.Unsetenv(AZURE_HTTP_USER_AGENT)
+	c.Unsetenv(AzureUserAgentEnvVar)
 
 	cfg := runtime.NewConfigFor(c.Context)
 	m := &TestMixin{

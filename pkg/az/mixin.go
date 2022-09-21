@@ -1,19 +1,17 @@
 package az
 
 import (
-	"get.porter.sh/porter/pkg/context"
+	"get.porter.sh/porter/pkg/runtime"
 )
 
 type Mixin struct {
-	*context.Context
-	//add whatever other context/state is needed here
+	runtime.RuntimeConfig
 }
 
 // New azure mixin client, initialized with useful defaults.
 func New() (*Mixin, error) {
-	cxt := context.New()
 	m := &Mixin{
-		Context: cxt,
+		RuntimeConfig: runtime.NewConfig(),
 	}
 
 	m.SetUserAgent()

@@ -2,6 +2,7 @@ package az
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"path"
 	"testing"
@@ -35,6 +36,7 @@ func TestMixin_Execute(t *testing.T) {
 	for _, tc := range testcases {
 		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
+			ctx := context.Background()
 			m := NewTestMixin(t)
 
 			m.Setenv(test.ExpectedCommandEnv, tc.wantCommand)
@@ -43,7 +45,7 @@ func TestMixin_Execute(t *testing.T) {
 
 			m.In = bytes.NewBuffer(mixinInputB)
 
-			err = m.Execute()
+			err = m.Execute(ctx)
 			require.NoError(t, err, "execute failed")
 
 			if tc.wantOutput == "" {

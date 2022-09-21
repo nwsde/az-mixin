@@ -1,9 +1,9 @@
 package az
 
 import (
+	"context"
 	"strings"
 
-	"get.porter.sh/porter/pkg/context"
 	"get.porter.sh/porter/pkg/exec/builder"
 )
 
@@ -20,7 +20,7 @@ type GroupCommand struct {
 	Location    string `yaml:"location"`
 }
 
-func (c *GroupCommand) HandleError(cxt *context.Context, err builder.ExitError, stdout string, stderr string) error {
+func (c *GroupCommand) HandleError(ctx context.Context, err builder.ExitError, stdout string, stderr string) error {
 	switch c.action {
 	case "uninstall":
 		// It's okay if we try to delete the resource group and it's already gone

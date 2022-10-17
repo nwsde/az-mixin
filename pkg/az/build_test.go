@@ -2,6 +2,7 @@ package az
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"testing"
 
@@ -27,10 +28,9 @@ func TestMixin_Build(t *testing.T) {
 			require.NoError(t, err)
 
 			m := NewTestMixin(t)
-			m.Debug = false
 			m.In = bytes.NewReader(b)
 
-			err = m.Build()
+			err = m.Build(context.Background())
 			require.NoError(t, err, "build failed")
 
 			test.CompareGoldenFile(t, tc.wantOutputFile, m.TestContext.GetOutput())

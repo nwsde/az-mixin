@@ -1,6 +1,8 @@
 config:
+  clientVersion: 1.2.3
   extensions:
     - iot
+
 actions:
   install:
     - az:

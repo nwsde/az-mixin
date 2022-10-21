@@ -37,6 +37,28 @@ mixins:
     - EXTENSION_NAME
 ```
 
+### User Agent Opt Out
+
+When you declare the mixin, you can disable the mixin from customizing the az user agent string
+
+```yaml
+mixins:
+- az:
+    userAgentOptOut: true
+```
+
+By default, the az mixin adds the porter and mixin version to the user agent string used by the az CLI.
+We use this to understand which version of porter and the mixin are being used by a bundle, and assist with troubleshooting.
+Below is an example of what the user agent string looks like:
+
+```
+AZURE_HTTP_USER_AGENT="getporter/porter/v1.0.0 getporter/az/v1.2.3"
+```
+
+You can add your own custom strings to the user agent string by editing your [template Dockerfile] and setting the AZURE_HTTP_USER_AGENT environment variable.
+
+[template Dockerfile]: https://getporter.org/bundle/custom-dockerfile/
+
 ## Mixin Syntax
 
 The format below is for executing any arbitrary az CLI command.

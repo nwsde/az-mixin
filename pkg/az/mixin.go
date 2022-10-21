@@ -6,15 +6,19 @@ import (
 
 type Mixin struct {
 	runtime.RuntimeConfig
+	userAgent string
 }
 
 // New azure mixin client, initialized with useful defaults.
-func New() (*Mixin, error) {
+func New() *Mixin {
+	return NewFor(runtime.NewConfig())
+}
+
+func NewFor(cfg runtime.RuntimeConfig) *Mixin {
 	m := &Mixin{
-		RuntimeConfig: runtime.NewConfig(),
+		RuntimeConfig: cfg,
 	}
 
 	m.SetUserAgent()
-	return m, nil
-
+	return m
 }

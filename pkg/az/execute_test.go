@@ -3,7 +3,9 @@ package az
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io/ioutil"
+	"os"
 	"path"
 	"testing"
 
@@ -14,6 +16,13 @@ import (
 
 func TestMain(m *testing.M) {
 	test.TestMainWithMockedCommandHandlers(m)
+
+	// Validate that we passed in the user agent environment variable when we called the az cli
+	_, hasEnv := os.LookupEnv(AzureUserAgentEnvVar)
+	if !hasEnv {
+		fmt.Println("expected the az cli to be called with the AZURE_HTTP_USER_AGENT environment variable set")
+		os.Exit(127)
+	}
 }
 
 func TestMixin_Execute(t *testing.T) {

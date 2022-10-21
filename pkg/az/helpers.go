@@ -16,11 +16,13 @@ type TestMixin struct {
 // NewTestMixin initializes a mixin test client, with the output buffered, and an in-memory file system.
 func NewTestMixin(t *testing.T) *TestMixin {
 	c := portercontext.NewTestContext(t)
+
+	// Clear this out when testing since our CI environment has modifications to it
+	c.Unsetenv(AzureUserAgentEnvVar)
+
 	cfg := runtime.NewConfigFor(c.Context)
 	m := &TestMixin{
-		Mixin: &Mixin{
-			RuntimeConfig: cfg,
-		},
+		Mixin:       NewFor(cfg),
 		TestContext: c,
 	}
 	t.Cleanup(func() {

@@ -1,6 +1,7 @@
 package az
 
 import (
+	"os"
 	"testing"
 
 	"get.porter.sh/mixin/az/pkg"
@@ -9,6 +10,9 @@ import (
 )
 
 func TestMixinSetsUserAgentEnvVar(t *testing.T) {
+	// CI sets this value and we need to clear it out to make the test reproducible
+	os.Unsetenv(AzureUserAgentEnvVar)
+
 	t.Run("sets env var", func(t *testing.T) {
 		pkg.Commit = "abc123"
 		pkg.Version = "v1.2.3"
@@ -50,6 +54,9 @@ func TestMixinSetsUserAgentEnvVar(t *testing.T) {
 }
 
 func TestMixinSetsUserAgentEnvVar_OptOut(t *testing.T) {
+	// CI sets this value and we need to clear it out to make the test reproducible
+	os.Unsetenv(AzureUserAgentEnvVar)
+
 	t.Run("opt-out", func(t *testing.T) {
 		// Validate that at runtime when we are calling the az cli, that if the bundle author opted-out, we don't set the user agent string
 		cfg := runtime.NewConfig()

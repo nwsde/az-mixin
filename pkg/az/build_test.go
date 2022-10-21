@@ -23,7 +23,7 @@ func TestMixin_Build(t *testing.T) {
 
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			// Set a take version of the mixin and porter for our user agent
+			// Set a fake version of the mixin and porter for our user agent
 			pkg.Version = "v1.2.3"
 
 			b, err := ioutil.ReadFile(tc.inputFile)

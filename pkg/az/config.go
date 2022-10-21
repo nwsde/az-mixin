@@ -31,7 +31,7 @@ func (m *Mixin) SetUserAgent() {
 		return
 	}
 
-	// Append porter and the mixin's version to the user agent string Some clouds and
+	// Append porter and the mixin's version to the user agent string. Some clouds and
 	// environments will have set the environment variable already and we don't want
 	// to clobber it.
 	porterUserAgent := pkg.UserAgent()

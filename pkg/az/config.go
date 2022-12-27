@@ -31,16 +31,25 @@ func (m *Mixin) SetUserAgent() {
 		return
 	}
 
+	porterUserAgent := pkg.UserAgent()
+	mixinUserAgent := m.GetMixinUserAgent()
+	userAgent := []string{porterUserAgent, mixinUserAgent}
 	// Append porter and the mixin's version to the user agent string. Some clouds and
 	// environments will have set the environment variable already and we don't want
 	// to clobber it.
-	porterUserAgent := pkg.UserAgent()
-	value := []string{porterUserAgent, m.GetMixinUserAgent()}
+	value := strings.Join(userAgent, " ")
 	if agentStr, ok := m.LookupEnv(AzureUserAgentEnvVar); ok {
-		value = append(value, agentStr)
+
+		// Check if we have already set the user agent
+		if strings.Contains(agentStr, value) {
+			value = agentStr
+		} else {
+			userAgent = append(userAgent, agentStr)
+			value = strings.Join(userAgent, " ")
+		}
 	}
 
-	m.userAgent = strings.Join(value, " ")
+	m.userAgent = value
 
 	// Set the az CLI user agent as an environment variable so that when we call the
 	// az CLI, it's automatically passed too.

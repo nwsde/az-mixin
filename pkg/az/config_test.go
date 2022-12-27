@@ -37,8 +37,21 @@ func TestMixinSetsUserAgentEnvVar(t *testing.T) {
 		require.Equal(t, expected, m.Getenv(AzureUserAgentEnvVar))
 		require.Equal(t, expected, m.userAgent, "validate we remember the user agent string for later")
 	})
-
+	t.Run("env var already set", func(t *testing.T) {
+		// Validate that calling multiple times doesn't make a messed up env var
+		pkg.Commit = "abc123"
+		pkg.Version = "v1.2.3"
+		cfg := runtime.NewConfig()
+		customUserAgent := "getporter/porter getporter/az/v1.2.3"
+		cfg.Setenv(AzureUserAgentEnvVar, customUserAgent)
+		m := NewFor(cfg)
+		m.SetUserAgent()
+		expected := "getporter/porter getporter/az/v1.2.3"
+		require.Equal(t, expected, m.Getenv(AzureUserAgentEnvVar))
+		require.Equal(t, expected, m.userAgent, "validate we remember the user agent string for later")
+	})
 	t.Run("call multiple times", func(t *testing.T) {
+		os.Unsetenv(AzureUserAgentEnvVar)
 		// Validate that calling multiple times doesn't make a messed up env var
 		pkg.Commit = "abc123"
 		pkg.Version = "v1.2.3"

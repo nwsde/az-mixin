@@ -1,3 +1,4 @@
 bin
 .cnab
 /build/git_askpass.sh
+az

@@ -2,6 +2,8 @@ module get.porter.sh/mixin/az
 
 go 1.21
 
+toolchain go1.21.3
+
 // These are replace directives copied from porter
 // When you use a newer version of Porter, if you run into trouble with go mod tidy
 // Copy any additional replace directives from Porter's go.mod file

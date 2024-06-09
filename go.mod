@@ -2,6 +2,8 @@ module get.porter.sh/mixin/az
 
 go 1.21
 
+toolchain go1.21.3
+
 // These are replace directives copied from porter
 // When you use a newer version of Porter, if you run into trouble with go mod tidy
 // Copy any additional replace directives from Porter's go.mod file
@@ -10,7 +12,7 @@ go 1.21
 replace github.com/spf13/viper => github.com/getporter/viper v1.7.1-porter.2.0.20210514172839-3ea827168363
 
 require (
-	get.porter.sh/magefiles v0.6.3
+	get.porter.sh/magefiles v0.6.7
 	get.porter.sh/porter v1.0.17
 	github.com/PaesslerAG/jsonpath v0.1.1
 	github.com/ghodss/yaml v1.0.0
@@ -98,6 +100,7 @@ require (
 	github.com/qri-io/jsonpointer v0.1.1 // indirect
 	github.com/qri-io/jsonschema v0.2.2-0.20210831022256-780655b2ba0e // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/shopspring/decimal v1.3.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spf13/afero v1.9.5 // indirect

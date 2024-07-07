@@ -5,10 +5,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	commandFile string
-)
-
 func buildInstallCommand(m *az.Mixin) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "install",

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"get.porter.sh/mixin/az/pkg"
+	"get.porter.sh/porter/pkg/config"
 	"get.porter.sh/porter/pkg/portercontext"
 	"get.porter.sh/porter/pkg/runtime"
 )
@@ -15,15 +16,15 @@ type TestMixin struct {
 
 // NewTestMixin initializes a mixin test client, with the output buffered, and an in-memory file system.
 func NewTestMixin(t *testing.T) *TestMixin {
-	c := portercontext.NewTestContext(t)
+	testCfg := config.NewTestConfig(t)
 
 	// Clear this out when testing since our CI environment has modifications to it
-	c.Unsetenv(AzureUserAgentEnvVar)
+	testCfg.Unsetenv(AzureUserAgentEnvVar)
 
-	cfg := runtime.NewConfigFor(c.Context)
+	cfg := runtime.NewConfigFor(testCfg.Config)
 	m := &TestMixin{
 		Mixin:       NewFor(cfg),
-		TestContext: c,
+		TestContext: testCfg.TestContext,
 	}
 	t.Cleanup(func() {
 		pkg.Version = ""

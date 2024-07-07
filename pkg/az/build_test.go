@@ -19,6 +19,7 @@ func TestMixin_Build(t *testing.T) {
 	}{
 		{name: "build with config", inputFile: "testdata/build-input-with-config.yaml", wantOutputFile: "testdata/build-with-config.txt"},
 		{name: "build without config", inputFile: "testdata/build-input-without-config.yaml", wantOutputFile: "testdata/build-without-config.txt"},
+		{name: "build with bicep", inputFile: "testdata/build-input-with-bicep.yaml", wantOutputFile: "testdata/build-with-bicep.txt"},
 	}
 
 	for _, tc := range testcases {

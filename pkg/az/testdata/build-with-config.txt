@@ -7,7 +7,9 @@ RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
 	apt-get update && apt-get install -y --no-install-recommends \
+	
 	azure-cli=1.2.3-1~$(lsb_release -cs)
 
 RUN az extension add -y --name iot
+
 

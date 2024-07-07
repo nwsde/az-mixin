@@ -1,13 +1,17 @@
 
-ENV PORTER_AZ_MIXIN_USER_AGENT_OPT_OUT="false"
-ENV AZURE_HTTP_USER_AGENT="getporter/porter getporter/az/v1.2.3"
+ENV PORTER_AZ_MIXIN_USER_AGENT_OPT_OUT="true"
+ENV AZURE_HTTP_USER_AGENT=""
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
 	apt-get update && apt-get install -y apt-transport-https lsb-release gnupg curl
 RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /etc/apt/trusted.gpg.d/microsoft.asc.gpg
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
 	apt-get update && apt-get install -y --no-install-recommends \
-	
-	azure-cli
+	libicu72 \
+	azure-cli=1.2.3-1~$(lsb_release -cs)
 
+RUN az extension add -y --name iot
+
+
+RUN az bicep install
 

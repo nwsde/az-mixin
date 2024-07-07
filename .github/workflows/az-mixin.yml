@@ -21,6 +21,8 @@ jobs:
         cache: true
     - name: Configure Agent
       run: go run mage.go ConfigureAgent
+    - name: Vet and Lint
+      run: mage Vet Lint
     - name: Test
       run: mage Test
     - name: Cross Compile

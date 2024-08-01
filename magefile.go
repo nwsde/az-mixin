@@ -5,6 +5,9 @@ package main
 import (
 	"get.porter.sh/magefiles/git"
 	"get.porter.sh/magefiles/mixins"
+	"get.porter.sh/magefiles/tools"
+	"github.com/carolynvs/magex/shx"
+	"github.com/magefile/mage/mg"
 )
 
 const (
@@ -14,6 +17,7 @@ const (
 )
 
 var magefile = mixins.NewMagefile(mixinPackage, mixinName, mixinBin)
+var must = shx.CommandBuilder{StopOnError: true}
 
 func ConfigureAgent() {
 	magefile.ConfigureAgent()
@@ -41,6 +45,17 @@ func Test() {
 // Publish the mixin to github
 func Publish() {
 	magefile.Publish()
+}
+
+// Run Go Vet on the project
+func Vet() {
+	must.RunV("go", "vet", "./...")
+}
+
+// Run golangci-lint on the project
+func Lint() {
+	mg.Deps(tools.EnsureGolangCILint)
+	must.RunV("golangci-lint", "run", "--max-issues-per-linter", "0", "--max-same-issues", "0", "./...")
 }
 
 // TestPublish tries out publish locally, with your github forks

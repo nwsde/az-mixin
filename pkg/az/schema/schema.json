@@ -29,6 +29,10 @@
               "items": {
                 "type": "string"
               }
+            },
+            "installBicep": {
+              "description": "Indicates if Bicep should be install",
+              "type": "boolean"
             }
           },
           "additionalProperties": false

@@ -3,7 +3,7 @@ package az
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"get.porter.sh/mixin/az/pkg"
@@ -27,7 +27,7 @@ func TestMixin_Build(t *testing.T) {
 			// Set a fake version of the mixin and porter for our user agent
 			pkg.Version = "v1.2.3"
 
-			b, err := ioutil.ReadFile(tc.inputFile)
+			b, err := os.ReadFile(tc.inputFile)
 			require.NoError(t, err)
 
 			m := NewTestMixin(t)

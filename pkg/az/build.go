@@ -28,6 +28,9 @@ type MixinConfig struct {
 
 	// Extensions is a list of az CLI extensions to install.
 	Extensions []string `yaml:"extensions,omitempty"`
+
+	// Indicates if Bicep should be installed
+	InstallBicep bool `yaml:"installBicep,omitempty"`
 }
 
 // buildConfig is the set of configuration options for the mixin's portion of the Dockerfile
@@ -50,9 +53,13 @@ RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >
 RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list
 RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
 	apt-get update && apt-get install -y --no-install-recommends \
+	{{ if .InstallBicep }}libicu72 \{{ end }}
 	{{ if eq .ClientVersion ""}}azure-cli{{else}}azure-cli={{.ClientVersion}}-1~$(lsb_release -cs){{end}}
 {{ range $ext := .Extensions }}
 RUN az extension add -y --name {{ $ext }}
+{{ end }}
+{{ if .InstallBicep }}
+RUN az bicep install
 {{ end }}
 `
 

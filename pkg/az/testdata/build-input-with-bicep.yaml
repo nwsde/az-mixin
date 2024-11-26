@@ -1,0 +1,15 @@
+config:
+  userAgentOptOut: true
+  clientVersion: 1.2.3
+  extensions:
+    - iot
+  installBicep: true
+
+actions:
+  install:
+    - az:
+        arguments:
+          - login
+        description: Login
+  uninstall: []
+  upgrade: []

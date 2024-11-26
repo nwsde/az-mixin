@@ -59,6 +59,18 @@ You can add your own custom strings to the user agent string by editing your [te
 
 [template Dockerfile]: https://getporter.org/bundle/custom-dockerfile/
 
+### Install Bicep
+
+When you declare the mixin, you can also configure Bicep to be install
+
+```yaml
+mixins:
+- az:
+    installBicep: true
+```
+
+This is required if you want to use the `az bicep` subcommands.
+
 ## Mixin Syntax
 
 The format below is for executing any arbitrary az CLI command.

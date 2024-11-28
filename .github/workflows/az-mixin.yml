@@ -27,6 +27,8 @@ jobs:
       run: mage Test
     - name: Cross Compile
       run: mage XBuildAll
+    - name: List
+      run: ls -ls
     - name: Publish
       if: success() && github.event_name != 'PullRequest'
       env:
